@@ -9,12 +9,12 @@ const jwt = require("jsonwebtoken")
 const createAuthor = async function (req, res) {
 
     try {
-        const name = req.body;
-        let create = await authorModel.create(name);
-        res.status(200).send({ msg: "The data is here", create });
+        const reqbody = req.body;
+        let author = await authorModel.create(reqbody);
+        res.status(201).send({ msg: "The author is created", author });
     } catch (err) {
         console.log(err.message);
-        res.status(500).send({ msg: "There is some error" })
+        res.status(500).send({ msg: "There is some error due to wrong credentials in body " })
     }
 
 }
@@ -23,7 +23,7 @@ const createAuthor = async function (req, res) {
 
 
 
-///////////////////////////////////////////////////////
+//---------------------------------------------------------------------------//
 
 
 const login = async function (req, res) {
@@ -37,7 +37,7 @@ const login = async function (req, res) {
                 const Token = jwt.sign({ userId: User._id }, "Thunders")
                 res.header('x-api-key', Token)
          
-                res.status(200).send({ status: true })
+                res.status(200).send({ status: true, msg:"you are LoggedIn !" })
             } else {
                 res.status(400).send({ status: false, Msg: "Invalid Credentials" })
             }
