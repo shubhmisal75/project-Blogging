@@ -17,13 +17,13 @@ const createBlog = async function (req, res) {
         let write = await blogModel.create(blog);
         res.status(201).send({ msg: "The blog is created ", data:write });
       } else {
-        res.status(400).send({ msg: "Invalid Credential" });
+        return res.status(400).send({ msg: "Invalid Credential" });
       }
     } else {
-      res.status(404).send({ err: "Prohibited authentication" });
+    return  res.status(400).send({ err: "Prohibited authentication" });
     }
   } catch (err) {
-    res.status(500).send({ msg: "There is some error" });
+    return res.status(500).send({ msg: "There is some error" });
   }
 };
 
@@ -36,6 +36,7 @@ const getBlogs = async function (req, res) {
         isDeleted: false,
         isPublished: true,
       };
+
       if (req.query.authorId) {
         updatedfilter["authorId"] = req.query.authorId;
       }
@@ -48,17 +49,19 @@ const getBlogs = async function (req, res) {
       if (req.query.subcategory) {
         updatedfilter["subcategory"] = req.query.subcategory;
       }
+          console.log(updatedfilter)
       let check = await blogModel.find(updatedfilter);
       if (check.length > 0) {
-        res.status(200).send({ status: true, data: check });
-      } else {
-        res.status(404).send({ msg: "not find" });
+        return res.status(200).send({ status: true, data: check });
+      }
+       else {
+       return res.status(404).send({ msg: "not find" });
       }
     } else {
-      res.status(404).send({ err: "Invalid AuthorId " });
+     return res.status(404).send({ err: "Invalid AuthorId " });
     }
   } catch (error) {
-    res.status(500).send({ msg: "error-response-status" });
+    return res.status(500).send({ status:false,msg:error.message });
   }
 };
 
@@ -74,10 +77,10 @@ const updateBlog = async function (req, res) {
     let isPublished = req.body.isPublished;
 
     const check = await blogModel.findOne({ _id: blogId });
-    const authrid = check.authrid;
+    const authrid = check.authorId
 
     if (req.user.userId == authrid) 
-    {
+    { 
       const updatedBlog = await blogModel.findOneAndUpdate(
         { _id: blogId },
         {
@@ -92,7 +95,7 @@ const updateBlog = async function (req, res) {
       if (updatedBlog.isPublished == true) {
         updatedBlog.publishedAt = new Date();
       }
-      res.status(200).send({  status: true,  message: "Blog updated successfully",data: updatedBlog });
+    return res.status(200).send({  status: true,  message: "Blog updated successfully",data: updatedBlog });
     } 
     else {
      return res.status(404).send({ msg: "invalid Authorization" });
@@ -106,7 +109,7 @@ const updateBlog = async function (req, res) {
 
 
 
-const checkdeletestatus = async function (req, res) {
+const deletebyparams = async function (req, res) {
   try {
     let blogId = req.params.blogId;
    const check = await blogModel.findOne({ _id:blogId,isDeleted:false});
@@ -121,26 +124,25 @@ const checkdeletestatus = async function (req, res) {
         { isDeleted: true, deletedAt: new Date() }
       );
       if (deletedblogs) {
-        res.status(200).send({ status:true,msg: " BLog deleted SucessFully" });
+       return res.status(200).send({ status:true,msg: " Blog deleted SucessFully" });
       } else {
-        res.status(404).send({ msg: "Invalid blogId" });
+       return res.status(404).send({ msg: "Invalid blogId" });
       }
     } else {
-      res.status(404).send({ err: "Invalid AuthorId " });
+      return res.status(404).send({ err: "Invalid AuthorId " });
     }
   } catch (error) {
-    res.status(500).send({ err: error });
+   return res.status(500).send({ err: error });
   }
 };
 
 //----------------------------6th-DELETE BLOG WITH QUERY----------------------------------------
 
-const deletebyparams = async function (req, res) {
+const deletebyquery = async function (req, res) {
   try {
     if (req.user.userId == req.query.authorId) {
       let updatedfilter = {};
 
-      //console.log(updatedfilter)
       if (req.query.authorId) {
         updatedfilter["authorId"] = req.query.authorId;
       }
@@ -171,20 +173,20 @@ const deletebyparams = async function (req, res) {
       deleteData.deletedAt = new Date();
       deleteData.save();
 
-      res.status(200).send({ msg: "Succesful", data: deleteData });
+      return res.status(200).send({ msg: "Succesful", data: deleteData });
     } else {
-      res.status(404).send({ msg: "Invalid AuthorId" });
+     return res.status(404).send({ msg: "Invalid AuthorId" });
     }
   } catch (error) {
-    res.status(500).send({ msg: error });
+   return res.status(500).send({ msg: error });
   }
 };
 
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.updateBlog = updateBlog;
-module.exports.checkdeletestatus = checkdeletestatus;
 module.exports.deletebyparams = deletebyparams;
+module.exports.deletebyquery = deletebyquery;
 
 
 
