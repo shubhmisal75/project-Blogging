@@ -35,8 +35,8 @@ const login = async function (req, res) {
             if (User) {
                 const Token = jwt.sign({ userId: User._id }, "Thunders")
                 res.header('x-api-key', Token)
-     
-               res.status(200).send({ status: true, msg:"you are LoggedIn !" })
+         
+                res.status(200).send({ status: true, msg:"you are LoggedIn !" })
             } else {
                return res.status(400).send({ status: false, Msg: "Invalid Credentials" })
             }
