@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+//--------------------------------------------------------//
 const authorSchema = new mongoose.Schema({
     fname: {
         type: String,
@@ -14,6 +14,7 @@ const authorSchema = new mongoose.Schema({
         enum:['Mr', 'Mrs', 'Miss'],
         required: true
     },
+
     email: {
         type: String,
         unique: true,
@@ -23,9 +24,9 @@ const authorSchema = new mongoose.Schema({
                 return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
             },
             message: "Please enter a valid email"
-
-        },
+  },
     },
+
     password: {
         type: String,
         required: true

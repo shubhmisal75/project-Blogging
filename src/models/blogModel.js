@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Schema.Types.ObjectId
-
+//-----------------------------------------------------------//
 const blogSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -26,7 +26,6 @@ const blogSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-
     deletedAt: Date,
     isDeleted: {
         type: Boolean,

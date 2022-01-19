@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken")
 
 const Auth = async function (req, res, next) {
     try {
-
         let token = req.headers['x-api-key']
         if (!token) {
             res.status(401).send({ status: false, Message: 'Token is missing.' })

@@ -108,9 +108,9 @@ const updateBlog = async function (req, res) {
 //---------------------------------5th-DELETE BLOG WITH ID----------------------------------------
 
 
-
 const deletebyparams = async function (req, res) {
   try {
+  
     let blogId = req.params.blogId;
    const check = await blogModel.findOne({ _id:blogId,isDeleted:false});
    if(!check){
